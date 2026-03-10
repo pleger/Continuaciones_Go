@@ -1,84 +1,84 @@
-# README de Tests
+# Test README
 
-Este documento explica:
+This document explains:
 
-1. Cómo ejecutar los tests.
-2. Cuál es el objetivo de cada suite.
+1. How to run the tests.
+2. The objective of each test suite.
 
-## Requisitos
+## Requirements
 
-- Go instalado y disponible en `PATH`.
-- Ejecutar desde la raíz del proyecto.
+- Go installed and available in `PATH`.
+- Run commands from the project root.
 
-## Cómo ejecutar los tests
+## How to run tests
 
-Ejecución completa (recomendada):
+Full run (recommended):
 
 ```bash
 mkdir -p .gocache
 GOCACHE=$(pwd)/.gocache go test ./...
 ```
 
-Ejecución con detalle (`-v`):
+Verbose run (`-v`):
 
 ```bash
 mkdir -p .gocache
 GOCACHE=$(pwd)/.gocache go test ./... -v
 ```
 
-Contar escenarios ejecutados (tests + subtests):
+Count executed scenarios (tests + subtests):
 
 ```bash
 mkdir -p .gocache
 GOCACHE=$(pwd)/.gocache go test ./... -v | rg '^=== RUN|^    --- RUN' | wc -l
 ```
 
-## Objetivo de los tests
+## Test objectives
 
 ### `timepoint/timepoint_test.go`
-Objetivo: validar el comportamiento público principal de la librería.
+Objective: validate the main public behavior of the library.
 
-Cubre:
+Covers:
 
-- Creación de snapshots (`Create`) y metadata.
-- Restauración por alcance (`RestoreStack`, `RestoreHeap`).
-- Reanudación con callback (`Resume`).
-- Manejo de errores y validaciones.
-- Representación textual (`ToString`).
+- Snapshot creation (`Create`) and metadata.
+- Scope-based restore (`RestoreStack`, `RestoreHeap`).
+- Resume with callback (`Resume`).
+- Error handling and validations.
+- String representation (`ToString`).
 
 ### `timepoint/deepcopy_test.go`
-Objetivo: validar la semántica de copia profunda y coerción de tipos.
+Objective: validate deep-copy semantics and type coercion.
 
-Cubre:
+Covers:
 
-- Copias de estructuras anidadas.
-- Preservación de ciclos y referencias compartidas.
-- Casos especiales (funciones/canales por referencia).
-- Reglas de `coerceToType` (éxitos y errores).
+- Copies of nested structures.
+- Preservation of cycles and shared references.
+- Special cases (functions/channels by reference).
+- `coerceToType` rules (success and failure cases).
 
 ### `timepoint/timepoint_matrix_test.go`
-Objetivo: cubrir una matriz amplia de escenarios para evitar regresiones.
+Objective: cover a broad matrix of scenarios to prevent regressions.
 
-Cubre:
+Covers:
 
-- Combinaciones de conversión en `coerceToType`.
-- Reglas de nilabilidad en `canBeNil`.
-- Matrices de `deepCopy` para tipos primitivos y de referencia.
-- Round-trip `Create` + restore con múltiples tipos de datos.
+- Conversion combinations in `coerceToType`.
+- Nilability rules in `canBeNil`.
+- `deepCopy` matrices for primitive and reference types.
+- `Create` + restore round-trip with multiple data types.
 
 ### `cmd/timepointgen/main_test.go`
-Objetivo: validar el generador de instrumentación automática.
+Objective: validate the automatic instrumentation generator.
 
-Cubre:
+Covers:
 
-- Detección de imports de `timepoint`.
-- Selección de scope interno.
-- Inyección AST de `WithVariables(...)` en `Create(...)`.
+- Detection of `timepoint` imports.
+- Inner scope selection.
+- AST injection of `WithVariables(...)` inside `Create(...)`.
 
-## Librería de aserciones usada
+## Assertion library used
 
-Todos los archivos de test usan la librería interna:
+All test files use the internal assertion helper library:
 
 - `internal/testx`
 
-Ventaja: aserciones más legibles (`testx.Equal`, `testx.NoError`, `testx.Contains`, etc.) y estilo consistente en toda la base de tests.
+Benefit: more readable assertions (`testx.Equal`, `testx.NoError`, `testx.Contains`, etc.) and consistent style across the test suite.

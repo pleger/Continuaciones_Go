@@ -18,7 +18,7 @@ Go does not expose a safe API to automatically capture all in-scope locals and j
 
 ## Option 2: automatic variable capture by instrumentation
 
-This repository now includes a generator (`cmd/timepointgen`) that rewrites `timepoint.Create(...)` calls to inject all visible local variables automatically as `WithVariables(...)`.
+This repository includes a generator (`cmd/timepointgen`) that rewrites `timepoint.Create(...)` calls to inject all visible local variables automatically as `WithVariables(...)`.
 
 How it works:
 
@@ -38,17 +38,17 @@ Run it for a single folder:
 go run ./cmd/timepointgen -w ./example_auto
 ```
 
-## Ejemplos completos (con transformación AST)
+## Complete examples (with AST transformation)
 
-Los 3 ejemplos siguientes muestran el flujo end-to-end:
+The following 3 examples show the end-to-end workflow:
 
-1. Escribes código con `timepoint.Create(...)` sin `WithVariables(...)`.
-2. Ejecutas el transformador AST (`timepointgen`).
-3. Ejecutas el programa ya instrumentado.
+1. Write code with `timepoint.Create(...)` and no `WithVariables(...)`.
+2. Run the AST transformer (`timepointgen`).
+3. Run the instrumented program.
 
-### Ejemplo 1: checkpoint + `Resume` con override
+### Example 1: checkpoint + `Resume` with override
 
-Código fuente (antes de transformar):
+Source code (before transformation):
 
 ```go
 package main
@@ -76,13 +76,13 @@ func main() {
 }
 ```
 
-Transformación AST:
+AST transformation:
 
 ```bash
-go run ./cmd/timepointgen -w ./ruta/del/ejemplo1
+go run ./cmd/timepointgen -w ./path/to/example1
 ```
 
-Resultado esperado de la transformación (simplificado):
+Expected transformed output (simplified):
 
 ```go
 p, _ := timepoint.Create(
@@ -95,15 +95,15 @@ p, _ := timepoint.Create(
 )
 ```
 
-Ejecución:
+Execution:
 
 ```bash
-go run ./ruta/del/ejemplo1
+go run ./path/to/example1
 ```
 
-### Ejemplo 2: `RestoreStack` + `RestoreHeap`
+### Example 2: `RestoreStack` + `RestoreHeap`
 
-Código fuente (antes de transformar):
+Source code (before transformation):
 
 ```go
 package main
@@ -121,18 +121,18 @@ func main() {
 	counter = 50
 	session.Quota = 0
 
-	_ = p.RestoreStack(nil) // restaura variables marcadas para stack
-	_ = p.RestoreHeap(nil)  // restaura variables marcadas para heap
+	_ = p.RestoreStack(nil) // restores variables tagged as stack
+	_ = p.RestoreHeap(nil)  // restores variables tagged as heap
 }
 ```
 
-Transformación AST:
+AST transformation:
 
 ```bash
-go run ./cmd/timepointgen -w ./ruta/del/ejemplo2
+go run ./cmd/timepointgen -w ./path/to/example2
 ```
 
-Instrumentación generada (simplificada):
+Generated instrumentation (simplified):
 
 ```go
 p, _ := timepoint.Create(
@@ -144,15 +144,15 @@ p, _ := timepoint.Create(
 )
 ```
 
-Ejecución:
+Execution:
 
 ```bash
-go run ./ruta/del/ejemplo2
+go run ./path/to/example2
 ```
 
-### Ejemplo 3: flujo automático con `go generate`
+### Example 3: automatic flow with `go generate`
 
-Código fuente:
+Source code:
 
 ```go
 package main
@@ -169,14 +169,14 @@ func main() {
 }
 ```
 
-Proceso completo:
+Complete process:
 
 ```bash
-go generate ./ruta/del/ejemplo3
-go run ./ruta/del/ejemplo3
+go generate ./path/to/example3
+go run ./path/to/example3
 ```
 
-Con este patrón, el paso AST queda integrado en el flujo de build del ejemplo/proyecto.
+With this pattern, the AST step is integrated into the build/run flow of the example/project.
 
 ## Run the example
 
@@ -194,7 +194,7 @@ go run ./example_auto
 ## Run tests
 
 The package includes documented unit tests for API behavior, error paths, and deep-copy semantics.
-See [TESTS.md](./TESTS.md) for a user-friendly testing README (execution + objectives, in Spanish).
+See [TESTS.md](./TESTS.md) for a user-friendly testing guide (execution + objectives).
 
 ```bash
 go test ./...
