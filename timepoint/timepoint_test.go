@@ -32,9 +32,25 @@ func TestCreateCapturesMetadata(t *testing.T) {
 	testx.Equal(t, "checkpoint-1", tp.Name())
 	pc := tp.ProgramCounter()
 	testx.Equal(t, "after-step", pc.Label)
+	testx.True(t, pc.Path != "", "program counter path should not be empty")
 	testx.True(t, pc.File != "", "program counter file should not be empty")
+	testx.True(t, pc.FullPath != "", "program counter full path should not be empty")
+	testx.True(t, strings.HasSuffix(pc.File, ".go"), "program counter file should be a .go file")
+	testx.True(t, strings.Contains(pc.FullPath, pc.File), "full path should include file name")
 	testx.True(t, pc.Function != "", "program counter function should not be empty")
 	testx.True(t, pc.Line > 0, "line should be > 0")
+}
+
+// TestCreateStoresPathFileLineAutomatically verifies route/file/line are captured without user-provided metadata.
+func TestCreateStoresPathFileLineAutomatically(t *testing.T) {
+	tp, err := Create()
+	testx.NoError(t, err)
+
+	pc := tp.ProgramCounter()
+	testx.True(t, pc.Path != "", "path should be captured automatically")
+	testx.True(t, pc.File != "", "file should be captured automatically")
+	testx.True(t, pc.FullPath != "", "full path should be captured automatically")
+	testx.True(t, pc.Line > 0, "line should be captured automatically")
 }
 
 // TestCreateAppliesSnapshotOverrides verifies that creation-time overrides become snapshot state.
@@ -235,7 +251,7 @@ func TestToStringIncludesSortedVariables(t *testing.T) {
 	testx.NoError(t, err)
 
 	out := tp.ToString()
-	for _, want := range []string{"Timepoint{", "name=\"tp\"", "label=\"label\"", "a(stack)", "b(stack)"} {
+	for _, want := range []string{"Timepoint{", "name=\"tp\"", "path=", "file=", "line=", "label=\"label\"", "a(stack)", "b(stack)"} {
 		testx.Contains(t, out, want)
 	}
 	testx.True(t, strings.Index(out, "a(stack)") < strings.Index(out, "b(stack)"), "variables should be sorted in ToString")

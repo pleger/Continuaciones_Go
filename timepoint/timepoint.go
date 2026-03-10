@@ -2,6 +2,7 @@ package timepoint
 
 import (
 	"fmt"
+	"path/filepath"
 	"reflect"
 	"runtime"
 	"sort"
@@ -40,9 +41,11 @@ type Variable struct {
 	Scope Scope
 }
 
-func StackVar(name string, ptr any) Variable { return Variable{Name: name, Ptr: ptr, Scope: ScopeStack} }
-func HeapVar(name string, ptr any) Variable  { return Variable{Name: name, Ptr: ptr, Scope: ScopeHeap} }
-func AnyVar(name string, ptr any) Variable   { return Variable{Name: name, Ptr: ptr, Scope: ScopeBoth} }
+func StackVar(name string, ptr any) Variable {
+	return Variable{Name: name, Ptr: ptr, Scope: ScopeStack}
+}
+func HeapVar(name string, ptr any) Variable { return Variable{Name: name, Ptr: ptr, Scope: ScopeHeap} }
+func AnyVar(name string, ptr any) Variable  { return Variable{Name: name, Ptr: ptr, Scope: ScopeBoth} }
 
 // ResumeFunc is called by Resume after state restoration.
 type ResumeFunc func(*Timepoint) error
@@ -50,7 +53,9 @@ type ResumeFunc func(*Timepoint) error
 // ProgramCounter stores symbolic resume metadata for the create call site.
 type ProgramCounter struct {
 	Function string
+	Path     string
 	File     string
+	FullPath string
 	Line     int
 	Label    string
 }
@@ -216,9 +221,13 @@ func captureProgramCounter(label string) ProgramCounter {
 	if fn == nil {
 		return pc
 	}
-	file, line := fn.FileLine(pcs[0] - 1)
+	fullPath, line := fn.FileLine(pcs[0] - 1)
 	pc.Function = fn.Name()
-	pc.File = file
+	pc.FullPath = fullPath
+	if fullPath != "" {
+		pc.Path = filepath.Dir(fullPath)
+		pc.File = filepath.Base(fullPath)
+	}
 	pc.Line = line
 	return pc
 }
@@ -299,7 +308,10 @@ func (t *Timepoint) String() string {
 	sort.Strings(names)
 
 	var b strings.Builder
-	fmt.Fprintf(&b, "Timepoint{name=%q, createdAt=%s, pc=%s:%d, function=%q", t.name, t.createdAt.Format(time.RFC3339), t.pc.File, t.pc.Line, t.pc.Function)
+	fmt.Fprintf(&b, "Timepoint{name=%q, createdAt=%s, path=%q, file=%q, line=%d, function=%q", t.name, t.createdAt.Format(time.RFC3339), t.pc.Path, t.pc.File, t.pc.Line, t.pc.Function)
+	if t.pc.FullPath != "" {
+		fmt.Fprintf(&b, ", fullPath=%q", t.pc.FullPath)
+	}
 	if t.pc.Label != "" {
 		fmt.Fprintf(&b, ", label=%q", t.pc.Label)
 	}

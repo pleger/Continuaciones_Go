@@ -2,7 +2,7 @@
 
 A Go library that provides a practical timepoint API:
 
-1. `Create(...)`: capture registered in-scope stack/heap variables and caller program-counter metadata.
+1. `Create(...)`: capture registered in-scope stack/heap variables and caller location metadata (path, file, line, function).
 2. `p.Resume(...)`: restore variables and run a continuation callback.
 3. `p.RestoreStack(...)`: restore stack-tagged variables only.
 4. `p.RestoreHeap(...)`: restore heap-tagged variables only.
@@ -13,7 +13,7 @@ A Go library that provides a practical timepoint API:
 Go does not expose a safe API to automatically capture all in-scope locals and jump to a real machine instruction pointer. This library uses:
 
 - Explicit variable registration (`StackVar`, `HeapVar`, `AnyVar`).
-- A symbolic program counter (`file`, `line`, `function`, and optional label).
+- A symbolic program counter (`path`, `file`, `line`, `function`, and optional label), captured automatically at `Create(...)`.
 - A continuation callback (`WithResume`) executed by `Resume`.
 
 ## Option 2: automatic variable capture by instrumentation
