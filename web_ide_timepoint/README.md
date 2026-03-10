@@ -8,7 +8,7 @@ This web app is focused on **Go** and provides:
 - variable editing at selected timepoints,
 - branched timelines when resuming with edited variables.
 
-Project repository: <https://github.com/pleger/Continuaciones_Go>
+Project repository: <https://github.com/pleger/Continuations_Go>
 
 ## Run locally
 
