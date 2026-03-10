@@ -140,7 +140,7 @@ function buildInstrumentedCode(source) {
       /^}\s*(while\b)/.test(trimmed);
 
     if (!skipHook) {
-      chunks.push(`await __ctx.__line(${ln});`);
+      chunks.push(`__ctx.__line(${ln});`);
     }
     chunks.push(transformed);
   });
@@ -398,7 +398,7 @@ async function executeCode() {
       warn: (...parts) => pushOutput("warn", parts, performance.now() - app.runStart, app.currentLine),
       error: (...parts) => pushOutput("error", parts, performance.now() - app.runStart, app.currentLine),
     },
-    __line: async (line) => {
+    __line: (line) => {
       if (app.stopRequested) {
         const stopErr = new Error("STOPPED");
         stopErr.__stop = true;
@@ -412,9 +412,6 @@ async function executeCode() {
       }
 
       renderAll();
-      if (app.delayMs > 0) {
-        await wait(app.delayMs);
-      }
     },
   };
 
