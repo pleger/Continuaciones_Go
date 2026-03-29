@@ -1,0 +1,9 @@
+{
+  "name": "deloreango",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DeloreanGo web playground",
+  "scripts": {
+    "start": "python3 -m http.server 8080"
+  }
+}

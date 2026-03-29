@@ -1,4 +1,4 @@
-# timepointlib
+# DeloreanGo
 
 A Go library that provides a practical timepoint API:
 

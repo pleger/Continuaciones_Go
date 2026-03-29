@@ -1,4 +1,4 @@
-# Timepoint Web IDE for Go
+# DeloreanGo Playground
 
 This web app is focused on **Go** and provides:
 
@@ -8,7 +8,7 @@ This web app is focused on **Go** and provides:
 - variable editing at selected timepoints,
 - branched timelines when resuming with edited variables.
 
-Project repository: <https://github.com/pleger/Continuations_Go>
+Project repository: <https://github.com/pleger/DeloreanGo>
 
 ## Run locally
 
