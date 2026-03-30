@@ -8,6 +8,12 @@ A Go library that provides a practical timepoint API:
 4. `p.RestoreHeap(...)`: restore heap-tagged variables only.
 5. `p.ToString()`: describe the timepoint.
 
+## Academic inspiration
+
+This implementation is inspired by and extends ideas from the following paper:
+
+Leger, P., Ruiz, F., Fukuda, H., & Cardozo, N. (2023). Benefits, challenges, and usability evaluation of DeloreanJS: a back-in-time debugger for JavaScript. *PeerJ Computer Science, 9*, e1238. Portico. https://doi.org/10.7717/peerj-cs.1238
+
 ## Why variable registration is explicit
 
 Go does not expose a safe API to automatically capture all in-scope locals and jump to a real machine instruction pointer. This library uses:

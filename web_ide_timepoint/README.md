@@ -10,6 +10,12 @@ This web app is focused on **Go** and provides:
 
 Project repository: <https://github.com/pleger/DeloreanGo>
 
+## Academic inspiration
+
+This playground is inspired by and extends ideas from:
+
+Leger, P., Ruiz, F., Fukuda, H., & Cardozo, N. (2023). Benefits, challenges, and usability evaluation of DeloreanJS: a back-in-time debugger for JavaScript. *PeerJ Computer Science, 9*, e1238. Portico. https://doi.org/10.7717/peerj-cs.1238
+
 ## Run locally
 
 ```bash
